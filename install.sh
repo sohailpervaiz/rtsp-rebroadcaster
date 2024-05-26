@@ -19,8 +19,37 @@ download_and_extract_mediamtx() {
     tar -xvzf "$(basename "$MEDIAMTX_TAR_URL")"
 }
 
+create_systemd_service() {
+    sudo tee "$SYSTEMD_SERVICE_FILE" > /dev/null <<EOF
+[Unit]
+Description=RTSP Rebroadcaster with MediaMTX and FFmpeg
+After=network.target
+
+[Service]
+ExecStart=$PROJECT_DIR/streams-rebroadcaster.sh
+Restart=always
+User=$USER
+Group=$(id -gn $USER)
+Environment=DISPLAY=:0
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+EOF
+}
+
+enable_and_start_service() {
+    sudo systemctl daemon-reload
+    sudo systemctl enable rtsp-rebroadcaster.service
+    sudo systemctl start rtsp-rebroadcaster.service
+}
+
 # Main script
 install_ffmpeg
 download_and_extract_mediamtx
+create_systemd_service
+enable_and_start_service
 
+# Output
 echo "Installation complete. The RTSP Rebroadcaster service has been started and will start on boot. Please reboot your computer to apply the changes."
