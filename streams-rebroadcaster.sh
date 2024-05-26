@@ -1,12 +1,17 @@
 #!/bin/bash
 
-source ./stream.conf
+source ~/rtsp-rebroadcaster/stream.conf
 
 # Change to the directory where MediaMTX is located
-cd $MEDIAMTX_PATH
+chmod +x $MEDIAMTX_PATH
+
 
 # Start MediaMTX
-./mediamtx &
+$MEDIAMTX_PATH &
+
+
+# Wait for MediaMTX to start fully
+sleep 3
 
 # Start FFmpeg streams
 for i in "${!STREAMS[@]}"; do
