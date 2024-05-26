@@ -19,6 +19,13 @@ download_and_extract_mediamtx() {
     tar -xvzf "$(basename "$MEDIAMTX_TAR_URL")"
 }
 
+make_the_script_executable() {
+    chmod +x "$PROJECT_DIR/streams-rebroadcaster.sh"
+    # Ensure the correct ownership
+    sudo chown $USER:$USER "$PROJECT_DIR/streams-rebroadcaster.sh"
+    sudo chown -R $USER:$USER "$PROJECT_DIR"
+}
+
 create_systemd_service() {
     sudo tee "$SYSTEMD_SERVICE_FILE" > /dev/null <<EOF
 [Unit]
@@ -48,6 +55,7 @@ enable_and_start_service() {
 # Main script
 install_ffmpeg
 download_and_extract_mediamtx
+make_the_script_executable
 create_systemd_service
 enable_and_start_service
 
