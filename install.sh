@@ -16,7 +16,6 @@ download_and_extract_mediamtx() {
     mkdir -p "$MEDIAMTX_DIR"
     cd "$MEDIAMTX_DIR"
     wget "$MEDIAMTX_TAR_URL"
-    tar -xvzf "$(basename "$MEDIAMTX_TAR_URL")"
 }
 
 make_the_script_executable() {
